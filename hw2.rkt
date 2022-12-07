@@ -106,7 +106,7 @@
 (test (parse `{+ 1 2}) (add (num 1) (num 2)))
 (test (parse `{- 1 2}) (sub (num 1) (num 2)))
 (test (parse `{with {x 3} {+ x 2}}) (with 'x (num 3) (add (id 'x) (num 2))))
-(test (parse `{f 10}) (app 'f (list (num 10)))) ;IS IT FINE THAT I MADE NUM 10 A LIST HERE? IT FIXED THE ERROR
+(test (parse `{f 10}) (app 'f (list (num 10)))) 
 (test/exn (parse `{+ 1 2 3}) "expected add")
 
 ;; ----------------------------------------------------------------------
