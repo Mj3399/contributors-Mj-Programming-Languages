@@ -3,15 +3,15 @@
 ;(require racket/trace)
 
 (define eight-principles
-(list
-"Know your rights."
-"Acknowledge your sources."
-"Protect your work."
-"Avoid suspicion."
-"Do your own work."
-"Never falsify a record or permit another person to do so."
-"Never fabricate data, citations, or experimental results."
-"Always tell the truth when discussing your work with your instructor."))
+  (list
+   "Know your rights."
+   "Acknowledge your sources."
+   "Protect your work."
+   "Avoid suspicion."
+   "Do your own work."
+   "Never falsify a record or permit another person to do so."
+   "Never fabricate data, citations, or experimental results."
+   "Always tell the truth when discussing your work with your instructor."))
 ;(print-only-errors)
 (define-type FnWAE
   [num (n number?)]
@@ -71,11 +71,11 @@
 
 (define (parse-defn deffun)
   (fundef 
-  (first (second deffun))
-  (if (equal? (length (rest (second deffun))) (length (remove-duplicates (rest (second deffun)))))
-      (rest (second deffun))
-     (error "bad syntax"))
-  (parse (third deffun)))
+   (first (second deffun))
+   (if (equal? (length (rest (second deffun))) (length (remove-duplicates (rest (second deffun)))))
+       (rest (second deffun))
+       (error "bad syntax"))
+   (parse (third deffun)))
   )
   
 
@@ -106,12 +106,12 @@
     [app (fun-name args)
          (define the-fundef (lookup-fundef fun-name
                                            fundefs))
-                        ;  (if (= (length (fundef-params the-fundef)) (length args))
-                   (interp (subshelp (fundef-body the-fundef) (fundef-params the-fundef) 
-                                  (map (lambda (arg) (interp arg fundefs)) args))
-                           fundefs)
-                  ; (error "wrong arity"))
-                 ]))
+         ;  (if (= (length (fundef-params the-fundef)) (length args))
+         (interp (subshelp (fundef-body the-fundef) (fundef-params the-fundef) 
+                           (map (lambda (arg) (interp arg fundefs)) args))
+                 fundefs)
+         ; (error "wrong arity"))
+         ]))
 
 (define (lookup-fundef name fundefs)
   (cond [(empty? fundefs)
@@ -144,7 +144,7 @@
         (if (equal? name name2)
             (num value)
             a-FnWAE)]
-;(require racket/trace) (trace interp)
+    ;(require racket/trace) (trace interp)
     [app (fun-name args)
          (app fun-name (map (lambda (arg) (subst arg name value)) args))]))
 
@@ -155,8 +155,8 @@
       (if (and (empty? names) (empty? values))
           afnwae
           (subshelp (subst afnwae (first names) (first values))
-           (rest names)
-           (rest values)))
+                    (rest names)
+                    (rest values)))
       (error "wrong arity")))
 ;; 5 -> 5
 (test (interp (parse `5) '())
@@ -276,8 +276,8 @@ substitute 10 for x in {with {x y} x}
 ;(trace subst)
 
 (test/exn (interp (parse '{f x})
-(list (parse-defn '{deffun {f a b c} c})))
-"free identifier")
+                  (list (parse-defn '{deffun {f a b c} c})))
+          "free identifier")
 
 
 
@@ -291,17 +291,17 @@ substitute 10 for x in {with {x y} x}
       10)
 
 (test/exn (interp (parse '{with {x y} 1})
-(list))
-"free identifier")
+                  (list))
+          "free identifier")
 (test/exn (interp (parse '{f 1 2})
-(list (parse-defn '{deffun {f x x} {+ x x}})))
-"bad syntax")
+                  (list (parse-defn '{deffun {f x x} {+ x x}})))
+          "bad syntax")
 (test/exn (interp (parse '{f x})
-(list (parse-defn '{deffun {g a b c} c})))
-"undefined function")
+                  (list (parse-defn '{deffun {g a b c} c})))
+          "undefined function")
 (test/exn (interp (parse '{f 1})
-(list (parse-defn '{deffun {f x y} {+ x y}})))
-"wrong arity")
+                  (list (parse-defn '{deffun {f x y} {+ x y}})))
+          "wrong arity")
 
 (test (parse `1)
       (num 1))
@@ -324,24 +324,24 @@ substitute 10 for x in {with {x y} x}
 
 ;some more organized tests lol
 (test (interp (parse '{f 1 2})
-(list (parse-defn '{deffun {f x y} {+ x y}})))
-3)
+              (list (parse-defn '{deffun {f x y} {+ x y}})))
+      3)
 (test (interp (parse '{+ {f} {f}})
-(list (parse-defn '{deffun {f} 5})))
-10)
+              (list (parse-defn '{deffun {f} 5})))
+      10)
 (test/exn (parse-defn '{deffun {f x x} x}) "bad syntax")
 (test/exn (interp (parse '{with {x y} 1})
-(list))
-"free identifier")
+                  (list))
+          "free identifier")
 (test/exn (interp (parse '{f 1 2})
-(list (parse-defn '{deffun {f x x} {+ x x}})))
-"bad syntax")
+                  (list (parse-defn '{deffun {f x x} {+ x x}})))
+          "bad syntax")
 (test/exn (interp (parse '{f x})
-(list (parse-defn '{deffun {g a b c} c})))
-"undefined function")
+                  (list (parse-defn '{deffun {g a b c} c})))
+          "undefined function")
 (test/exn (interp (parse '{f 1})
-(list (parse-defn '{deffun {f x y} {+ x y}})))
-"wrong arity")
+                  (list (parse-defn '{deffun {f x y} {+ x y}})))
+          "wrong arity")
 (test/exn (interp (parse '{f x})
-(list (parse-defn '{deffun {f a b c} c})))
-"free identifier")
+                  (list (parse-defn '{deffun {f a b c} c})))
+          "free identifier")

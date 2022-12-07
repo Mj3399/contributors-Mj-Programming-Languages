@@ -106,7 +106,7 @@
 (test (parse `{+ 1 2}) (add (num 1) (num 2)))
 (test (parse `{- 1 2}) (sub (num 1) (num 2)))
 (test (parse `{with {x 3} {+ x 2}}) (with 'x (num 3) (add (id 'x) (num 2))))
-(test (parse `{f 10}) (app 'f (list (num 10)))) 
+(test (parse `{f 10}) (app 'f (list (num 10)))) ;IS IT FINE THAT I MADE NUM 10 A LIST HERE? IT FIXED THE ERROR
 (test/exn (parse `{+ 1 2 3}) "expected add")
 
 ;; ----------------------------------------------------------------------
@@ -132,14 +132,14 @@
          
          (define the-fundef (lookup-fundef fun-name fundefs))
          
-             ; (type-case FunDef the-fundef
-             ;[fundef (fun-name param-name body) ;i dont see the point in typecasing?
-             (interp (fundef-body the-fundef)
-                     fundefs
-                     (asubhelp
-                      (fundef-params the-fundef)
-                      (map (lambda (arg) (interp arg fundefs ds)) args)
-                      (mtSub)))
+         ; (type-case FunDef the-fundef
+         ;[fundef (fun-name param-name body) ;i dont see the point in typecasing?
+         (interp (fundef-body the-fundef)
+                 fundefs
+                 (asubhelp
+                  (fundef-params the-fundef)
+                  (map (lambda (arg) (interp arg fundefs ds)) args)
+                  (mtSub)))
               
          ]))
 
@@ -163,10 +163,10 @@
   (if (and (empty? names) (empty? values))
       ds
       (if (or (and (null? values) (not (null? names)))
-                 (and (null? names) (not (null? values))))
-(error "wrong arity")
-      (asubhelp (rest names) (rest values)
-                (aSub  (first names) (first values) ds)))))
+              (and (null? names) (not (null? values))))
+          (error "wrong arity")
+          (asubhelp (rest names) (rest values)
+                    (aSub  (first names) (first values) ds)))))
 
 ;(trace asubhelp)
 ;; lookup-fundef : symbol? (listof FunDef?) -> FunDef?
@@ -425,8 +425,8 @@ x
 
 
 (test/exn (interp (parse '{f x})
-(list (parse-defn '{deffun {f a b c} c}))initial-def-sub)
-"free identifier")
+                  (list (parse-defn '{deffun {f a b c} c}))initial-def-sub)
+          "free identifier")
 
 
 
@@ -440,17 +440,17 @@ x
       10)
 
 (test/exn (interp (parse '{with {x y} 1})
-(list)initial-def-sub)
-"free identifier")
+                  (list)initial-def-sub)
+          "free identifier")
 (test/exn (interp (parse '{f 1 2})
-(list (parse-defn '{deffun {f x x} {+ x x}}))initial-def-sub)
-"bad syntax")
+                  (list (parse-defn '{deffun {f x x} {+ x x}}))initial-def-sub)
+          "bad syntax")
 (test/exn (interp (parse '{f x})
-(list (parse-defn '{deffun {g a b c} c}))initial-def-sub)
-"undefined function")
+                  (list (parse-defn '{deffun {g a b c} c}))initial-def-sub)
+          "undefined function")
 (test/exn (interp (parse '{f 1})
-(list (parse-defn '{deffun {f x y} {+ x y}}))initial-def-sub)
-"wrong arity")
+                  (list (parse-defn '{deffun {f x y} {+ x y}}))initial-def-sub)
+          "wrong arity")
 
 (test (parse `1)
       (num 1))
@@ -473,24 +473,24 @@ x
 
 ;some more organized tests lol
 (test (interp (parse '{f 1 2})
-(list (parse-defn '{deffun {f x y} {+ x y}}))initial-def-sub)
-3)
+              (list (parse-defn '{deffun {f x y} {+ x y}}))initial-def-sub)
+      3)
 (test (interp (parse '{+ {f} {f}})
-(list (parse-defn '{deffun {f} 5}))initial-def-sub)
-10)
+              (list (parse-defn '{deffun {f} 5}))initial-def-sub)
+      10)
 (test/exn (parse-defn '{deffun {f x x} x}) "bad syntax")
 (test/exn (interp (parse '{with {x y} 1})
-(list)initial-def-sub)
-"free identifier")
+                  (list)initial-def-sub)
+          "free identifier")
 (test/exn (interp (parse '{f 1 2})
-(list (parse-defn '{deffun {f x x} {+ x x}}))initial-def-sub)
-"bad syntax")
+                  (list (parse-defn '{deffun {f x x} {+ x x}}))initial-def-sub)
+          "bad syntax")
 (test/exn (interp (parse '{f x})
-(list (parse-defn '{deffun {g a b c} c}))initial-def-sub)
-"undefined function")
+                  (list (parse-defn '{deffun {g a b c} c}))initial-def-sub)
+          "undefined function")
 (test/exn (interp (parse '{f 1})
-(list (parse-defn '{deffun {f x y} {+ x y}}))initial-def-sub)
-"wrong arity")
+                  (list (parse-defn '{deffun {f x y} {+ x y}}))initial-def-sub)
+          "wrong arity")
 (test/exn (interp (parse '{f x})
-(list (parse-defn '{deffun {f a b c} c}))initial-def-sub)
-"free identifier")
+                  (list (parse-defn '{deffun {f a b c} c}))initial-def-sub)
+          "free identifier")

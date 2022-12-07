@@ -25,7 +25,7 @@
   [rstruct (thing
             (listof pair?))]  
   [get (expr RFAE?)
-          (id symbol?)]
+       (id symbol?)]
   [rset (expr RFAE?)
         (id symbol?)
         (val RFAE?)]
@@ -147,10 +147,10 @@
       (v*s (boxV (max-address st)) st)
       (type-case Value*Store (interp (cdr (first s)) ds st)
         [v*s (v st2)
-            (structing (rest s) ds (aSto (malloc st2)
-                                         (car (first s))
-                                         v
-                                         st2))]))) ;jesus
+             (structing (rest s) ds (aSto (malloc st2)
+                                          (car (first s))
+                                          v
+                                          st2))]))) ;jesus
 
 ;doing the hard part now so we dont need to freak out later ig yeah
 ;learned that the hard way from the recursion hw3 doing everything all in one spot is bad for the soul
@@ -207,16 +207,16 @@
            [(struct)
             ;(check-pieces s-exp "rstruct" 2) ;remember name clashes but still tested with real names so only use fake name outside of input to avoid clash still need to accept real name
             (rstruct (map (λ (x) 
-                      (cons (first  x) (parse (last  x)))) (rest s-exp)))] 
+                            (cons (first  x) (parse (last  x)))) (rest s-exp)))] 
            [(set)
             ;(check-pieces s-exp "rset" 3)
             (rset (parse (first (rest s-exp)))
                   (second (rest s-exp))
-                    (parse (third (rest s-exp))))]
+                  (parse (third (rest s-exp))))]
            [(get)
             ;(check-pieces s-exp "get" 2)
             (get (parse (second s-exp))
-                    (third s-exp))]
+                 (third s-exp))]
            [(seqn)
             ;(check-pieces s-exp "seqn" 3)
             (seqn (parse (second s-exp))
@@ -246,7 +246,7 @@
 
 ;; interp : RFAE? DefSub? Store? -> Value*Store?
 (define (interp a-RFAE ds st) ; NEW
-;(printf "size ~a\n" (size st))
+  ;(printf "size ~a\n" (size st))
   (type-case RFAE a-RFAE
     [num (n) (v*s (numV n) st)]
     [add (l r) (numop + l r ds st)]
@@ -258,24 +258,24 @@
               st)]
     [app (fun-expr arg-expr)
          (interp-two fun-expr arg-expr ds st
-         (λ (fun-val arg-val st3) ;i like that u can type the real lambda symbol with control backslash λ much nicer than writing lambda everywhere
-         (type-case RFAE-Value fun-val
-         [closureV (param-name body closed-ds)
-                   (interp body
-                   (aSub param-name
-                           arg-val
-                        closed-ds)
-                             st3)]
-         [else (error 'interp "expected function, got ~a" fun-val)])))]
+                     (λ (fun-val arg-val st3) ;i like that u can type the real lambda symbol with control backslash λ much nicer than writing lambda everywhere
+                       (type-case RFAE-Value fun-val
+                         [closureV (param-name body closed-ds)
+                                   (interp body
+                                           (aSub param-name
+                                                 arg-val
+                                                 closed-ds)
+                                           st3)]
+                         [else (error 'interp "expected function, got ~a" fun-val)])))]
     [rstruct (s) (structing s ds st)] ;now this, this is beautiful ;take that hw3 
     [get (box-expr field)
-             (type-case Value*Store (interp box-expr ds st)
-               [v*s (box-val st2)
-                    (type-case RFAE-Value box-val
-                      [boxV (address)
-                            (v*s (ls address field st2)
-                                 st2)]
-                      [else (error 'interp "expected record, got ~a" box-val)])])]
+         (type-case Value*Store (interp box-expr ds st)
+           [v*s (box-val st2)
+                (type-case RFAE-Value box-val
+                  [boxV (address)
+                        (v*s (ls address field st2)
+                             st2)]
+                  [else (error 'interp "expected record, got ~a" box-val)])])]
     
     [rset (box-expr field new-expr)
           (type-case Value*Store (interp box-expr ds st)
@@ -285,7 +285,7 @@
                    [boxV (address)
                          (type-case Value*Store (interp new-expr ds st1)
                            [v*s (val2 st2) (v*s (ls address field st2)
-                                                              (setE address field val2 st2))])]
+                                                (setE address field val2 st2))])]
                    [else (error "expected record")])])
           ]
     [seqn (expr1 expr2)

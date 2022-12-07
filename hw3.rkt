@@ -446,102 +446,102 @@ x
 ;// outside def for neg
 (define neg
   '{with {neg
-       {fun {x}
-         {with {negx
-                {fun {negx}
-                  {fun {x}
-                       {fun {y}
-                        {if0 y
-                        1
-                        {if0 x
-                             0
-                             {{{negx negx} {+ 1 x}} {- y 1}}}}}}}}
-           {{{negx negx} x} x}}}}
-      {fun {x} {neg x}}}
+          {fun {x}
+               {with {negx
+                      {fun {negx}
+                           {fun {x}
+                                {fun {y}
+                                     {if0 y
+                                          1
+                                          {if0 x
+                                               0
+                                               {{{negx negx} {+ 1 x}} {- y 1}}}}}}}}
+                     {{{negx negx} x} x}}}}
+         {fun {x} {neg x}}}
   )
 
 
 ;// outside def for division
-   (define div
-     '{with {neg
-       {fun {x}
-         {with {negx
-                {fun {negx}
-                  {fun {x}
-                       {fun {y}
-                        {if0 y
-                        1
-                        {if0 x
-                             0
-                             {{{negx negx} {+ 1 x}} {- y 1}}}}}}}}
-           {{{negx negx} x} x}}}}
-     {with {div
-             {fun {x y z}
-                  {with {divx
-                         {fun {divx}
-                              {fun {x}
-                                   {fun {y}
-                                        {fun {z}
-                                          {if0 {- x y}
-                                               {+ z 1}
-                                               {if0  {neg {- x y}}
-                                                    0
+(define div
+  '{with {neg
+          {fun {x}
+               {with {negx
+                      {fun {negx}
+                           {fun {x}
+                                {fun {y}
+                                     {if0 y
+                                          1
+                                          {if0 x
+                                               0
+                                               {{{negx negx} {+ 1 x}} {- y 1}}}}}}}}
+                     {{{negx negx} x} x}}}}
+         {with {div
+                {fun {x y z}
+                     {with {divx
+                            {fun {divx}
+                                 {fun {x}
+                                      {fun {y}
+                                           {fun {z}
+                                                {if0 {- x y}
+                                                     {+ z 1}
+                                                     {if0  {neg {- x y}}
+                                                           0
                                                     
-                                               {{{{divx divx} {- x y}} y} {+ z 1}}}
-                                               }}}}}}
-                         {{{{divx divx} x} y}z}}}}
-            {fun {x y z} {div x y z}}}}
-     )
+                                                           {{{{divx divx} {- x y}} y} {+ z 1}}}
+                                                     }}}}}}
+                           {{{{divx divx} x} y}z}}}}
+               {fun {x y z} {div x y z}}}}
+  )
 
 ;//final binding for prime with no unquotes just adapted outside defs into inside defs 
-   (define prime?
-     '{with {neg
-       {fun {x}
-         {with {negx
-                {fun {negx}
-                  {fun {x}
-                       {fun {y}
-                        {if0 y
-                        1
-                        {if0 x
-                             0
-                             {{{negx negx} {+ 1 x}} {- y 1}}}}}}}}
-           {{{negx negx} x} x}}}}
-     {with {div
-             {fun {x y z}
-                  {with {divx
-                         {fun {divx}
-                              {fun {x}
-                                   {fun {y}
-                                        {fun {z}
-                                          {if0 {- x y}
-                                               {+ z 1}
-                                               {if0  {neg {- x y}}
-                                                    0
+(define prime?
+  '{with {neg
+          {fun {x}
+               {with {negx
+                      {fun {negx}
+                           {fun {x}
+                                {fun {y}
+                                     {if0 y
+                                          1
+                                          {if0 x
+                                               0
+                                               {{{negx negx} {+ 1 x}} {- y 1}}}}}}}}
+                     {{{negx negx} x} x}}}}
+         {with {div
+                {fun {x y z}
+                     {with {divx
+                            {fun {divx}
+                                 {fun {x}
+                                      {fun {y}
+                                           {fun {z}
+                                                {if0 {- x y}
+                                                     {+ z 1}
+                                                     {if0  {neg {- x y}}
+                                                           0
                                                     
-                                               {{{{divx divx} {- x y}} y} {+ z 1}}}
-                                               }}}}}}
-                         {{{{divx divx} x} y}z}}}}
-            
-           {with {prime
-             {fun {x}
-                  {with {prix
-                         {fun {prix}
-                              {fun {x}
-                                   {fun {y}
-                                        {if0 {- y 1}
-                                                0
-                                                {if0 {div x y 0}
-                                                     {{{prix prix} x} {- y 1}}
-                                                     1
-                                           
+                                                           {{{{divx divx} {- x y}} y} {+ z 1}}}
                                                      }}}}}}
-                        {{{prix prix} x} {- x 1}}}}}
-           {fun {x} {prime x}}}}}
-     )
+                           {{{{divx divx} x} y}z}}}}
+            
+               {with {prime
+                      {fun {x}
+                           {with {prix
+                                  {fun {prix}
+                                       {fun {x}
+                                            {fun {y}
+                                                 {if0 {- y 1}
+                                                      0
+                                                      {if0 {div x y 0}
+                                                           {{{prix prix} x} {- y 1}}
+                                                           1
+                                           
+                                                           }}}}}}
+                                 {{{prix prix} x} {- x 1}}}}}
+                     {fun {x} {prime x}}}}}
+  )
 (test (interp-expr (compile (parse `{, neg 2}))) 1)
 (test (interp-expr (compile (parse `{, neg -2}))) 0)
-   (test (interp-expr (compile (parse `{, div 2 2 0}))) 1)
+(test (interp-expr (compile (parse `{, div 2 2 0}))) 1)
 (test (interp-expr (compile (parse `{, div 3 3 0}))) 1)
 (test (interp-expr (compile (parse `{, div 6 3 0}))) 2)
 (test (interp-expr (compile (parse `{, div 10 2 0}))) 5)
@@ -549,7 +549,7 @@ x
 (test (interp-expr (compile (parse `{, div 10 3 0}))) 0)
 (test (interp-expr (compile (parse `{, div 10 5 0}))) 2)
 (test (interp-expr (compile (parse `{, div 0 1 0}))) 0)
-   (test (interp-expr (compile (parse `{, prime? 11}))) 0)
+(test (interp-expr (compile (parse `{, prime? 11}))) 0)
 (test (interp-expr (compile (parse `{, div 1 1 0}))) 1)
 (test (interp-expr (compile (parse `{, div 2 1 0}))) 2)
 (test (interp-expr (compile (parse `{, div 200 1 0}))) 200)
@@ -558,9 +558,8 @@ x
 (test (interp-expr (compile (parse `{, prime? 97}))) 0)
 (test (interp-expr (compile (parse `{, prime? 98}))) 1)
 ;(trace interp)
-   (test (interp-expr (compile (parse `{, factorial 10})) )  3628800)
-   ;(test (interp-expr (compile (parse `{, factorial 11})) )  39916800) out of memory
-   (test (interp-expr (compile (parse `{, factorial 7})) )  5040)
-   (test (interp-expr (compile (parse `{, prime? 29}))) 0)
-   (test (interp-expr (compile (parse `{, prime? 10}))) 1)
-   
+(test (interp-expr (compile (parse `{, factorial 10})) )  3628800)
+;(test (interp-expr (compile (parse `{, factorial 11})) )  39916800) out of memory
+(test (interp-expr (compile (parse `{, factorial 7})) )  5040)
+(test (interp-expr (compile (parse `{, prime? 29}))) 0)
+(test (interp-expr (compile (parse `{, prime? 10}))) 1)
